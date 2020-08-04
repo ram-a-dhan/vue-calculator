@@ -38,7 +38,8 @@ export default {
     append(value) {
       if(
         !(/[0-9\.]/).test(value) &&
-        !(/[0-9\.]/).test(this.formula[this.formula.length - 1])
+        !(/[0-9\.]/).test(this.formula[this.formula.length - 1]) ||
+        ((/\./).test(value) && (/\./).test(this.formula[this.formula.length - 1]))
       ) {
         this.formula = this.formula.slice(0, -1);
       } 
