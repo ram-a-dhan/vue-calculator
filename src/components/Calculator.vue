@@ -1,27 +1,27 @@
 <template>
   <div class="calculator">
-    <div class="display formula">{{ formula }}</div>
-    <div class="display result">{{ result }}</div>
-    <div class="button">C</div>
-    <div class="button">&lt;&timesb;</div>
-    <div class="button">&plus;/&minus;</div>
-    <div class="button">&divide;</div>
-    <div class="button">7</div>
-    <div class="button">8</div>
-    <div class="button">9</div>
-    <div class="button">&times;</div>
-    <div class="button">4</div>
-    <div class="button">5</div>
-    <div class="button">6</div>
-    <div class="button">&minus;</div>
-    <div class="button">1</div>
-    <div class="button">2</div>
-    <div class="button">3</div>
-    <div class="button">&plus;</div>
-    <div class="button">000</div>
-    <div class="button">0</div>
-    <div class="button">.</div>
-    <div class="button equals">&equals;</div>
+    <div class="display formula">{{ formula || 0 }}</div>
+    <div class="display result">{{ tempResult || 0 }}</div>
+    <button class="button" @click="clear()">C</button>
+    <button class="button" @click="backspace()">&lt;&timesb;</button>
+    <button class="button">&plus;/&minus;</button>
+    <button class="button" @click="append('/')">&divide;</button>
+    <button class="button" @click="append('7')">7</button>
+    <button class="button" @click="append('8')">8</button>
+    <button class="button" @click="append('9')">9</button>
+    <button class="button" @click="append('*')">&times;</button>
+    <button class="button" @click="append('4')">4</button>
+    <button class="button" @click="append('5')">5</button>
+    <button class="button" @click="append('6')">6</button>
+    <button class="button" @click="append('-')">&minus;</button>
+    <button class="button" @click="append('1')">1</button>
+    <button class="button" @click="append('2')">2</button>
+    <button class="button" @click="append('3')">3</button>
+    <button class="button" @click="append('+')">&plus;</button>
+    <button class="button" >&percnt;</button>
+    <button class="button" @click="append('0')">0</button>
+    <button class="button" @click="append('.')">.</button>
+    <button class="button equals" @click="equals()">&equals;</button>
   </div>
 </template>
 
@@ -30,10 +30,53 @@ export default {
   name: 'Calculator',
   data() {
     return{
-      formula: '12+34-56*78/90',
-      result: '1234567890',
+      formula: '',
+      tempResult: '',
     }
-  }
+  },
+  methods: {
+    append(value) {
+      if(
+        !(/[0-9\.]/).test(value) &&
+        !(/[0-9\.]/).test(this.formula[this.formula.length - 1])
+      ) {
+        this.formula = this.formula.slice(0, -1);
+      } 
+      this.formula += value.toString();
+    },
+    clear() {
+      this.formula = '';
+      this.tempResult = '';
+    },
+    backspace() {
+      this.formula = this.formula.slice(0, -1);
+    },
+    equals() {
+      if (this.tempResult !== '') {
+        this.formula = this.tempResult;
+      }
+    },
+  },
+  watch: {
+    formula() {
+      if (
+        this.formula !== '' &&
+        this.formula.slice(0, -1) !== NaN &&
+        this.formula !== this.result
+        ) {
+        this.tempResult = this.result.toString();
+      }
+    },
+  },
+  computed: {
+    result() {
+      if (this.formula.slice(0, -1) !== NaN) {
+        return eval(this.formula);
+      } else {
+        return eval(this.formula.slice(0, -1));
+      }
+    }
+  },
 }
 </script>
 
@@ -70,6 +113,9 @@ $buttonSize: 1.5rem;
 .button {
   justify-content: center;
   align-items: center;
+  color: #2C3E50;
+  background-color: #F0F0F0;
+  border: 0px;
 }
 
 .equals {
@@ -81,12 +127,13 @@ $buttonSize: 1.5rem;
   font-size: $buttonSize;
 }
 
-.button:hover {
-  color: #F0F0F0;
-  background-color: #2C3E5080;
-}
+// .button:hover {
+//   color: #F0F0F0;
+//   background-color: #2C3E5080;
+// }
 
 .button:active {
+  color: #F0F0F0;
   background-color: #2C3E50;
 }
 
