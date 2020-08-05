@@ -2,9 +2,9 @@
   <div class="calculator">
     <div class="display formula">{{ formula || 0 }}</div>
     <div class="display result">{{ tempResult || 0 }}</div>
-    <button class="button" @click="clear()">C</button>
+    <button class="button" @click="clear()">AC</button>
     <button class="button" @click="backspace()">&lt;&timesb;</button>
-    <button class="button">&plus;/&minus;</button>
+    <button class="button" @click="negative()">&plus;/&minus;</button>
     <button class="button" @click="append('/')">&divide;</button>
     <button class="button" @click="append('7')">7</button>
     <button class="button" @click="append('8')">8</button>
@@ -18,7 +18,7 @@
     <button class="button" @click="append('2')">2</button>
     <button class="button" @click="append('3')">3</button>
     <button class="button" @click="append('+')">&plus;</button>
-    <button class="button" >&percnt;</button>
+    <button class="button" @click="percent()">&percnt;</button>
     <button class="button" @click="append('0')">0</button>
     <button class="button" @click="append('.')">.</button>
     <button class="button equals" @click="equals()">&equals;</button>
@@ -36,10 +36,12 @@ export default {
   },
   methods: {
     append(value) {
+      let entries = this.formula.split(/[\+\-\*\/]/);
+      let lastEntry = entries[entries.length - 1];
+      if ((/\./).test(value) && (/\./).test(lastEntry)) return false;
       if(
-        !(/[0-9\.]/).test(value) &&
-        !(/[0-9\.]/).test(this.formula[this.formula.length - 1]) ||
-        ((/\./).test(value) && (/\./).test(this.formula[this.formula.length - 1]))
+        !(/[0-9]/).test(value) &&
+        !(/[0-9]/).test(this.formula[this.formula.length - 1])
       ) {
         this.formula = this.formula.slice(0, -1);
       } 
@@ -51,6 +53,32 @@ export default {
     },
     backspace() {
       this.formula = this.formula.slice(0, -1);
+    },
+    negative() {
+      if (
+        this.formula.length === 0 ||
+        (/[\+\-\*\/]/).test(this.formula[this.formula.length - 1])
+      ) return false;
+      let entries = this.formula.split(/[\+\-\*\/]/);
+      let lastEntry = entries[entries.length - 1];
+      let lastEntryLength = lastEntry.length;
+      let restOfEntry = this.formula.slice(0, lastEntryLength * -1);
+      if (restOfEntry[restOfEntry.length - 1] === '-') {
+        this.formula = restOfEntry.slice(0, -1) + '+' + lastEntry;
+      } else if (restOfEntry[restOfEntry.length - 1] === '+') {
+        this.formula = restOfEntry.slice(0, -1) + '-' + lastEntry;
+      } else {
+        this.formula = restOfEntry + '-' + lastEntry;
+      }
+    },
+    percent() {
+      if (this.formula.length === 0) return false;
+      let entries = this.formula.split(/[\+\-\*\/]/);
+      let lastEntry = entries[entries.length - 1];
+      let lastEntryLength = lastEntry.length;
+      let newEntry = Number(lastEntry) / 100;
+      this.formula = this.formula.slice(0, lastEntryLength * -1);
+      this.formula += newEntry.toString();
     },
     equals() {
       if (this.tempResult !== '') {
@@ -93,7 +121,7 @@ $buttonSize: 1.5rem;
   width: Calc($gridSize * 4);
   margin: auto;
 }
-.display, .button {
+.button {
   display: flex;
   flex-flow: row nowrap;
   height: $gridSize;
@@ -104,6 +132,14 @@ $buttonSize: 1.5rem;
   justify-content: flex-end;
   align-items: center;
   padding: 0rem 1rem;
+  display: flex;
+  flex-flow: row nowrap;
+  min-height: $gridSize;
+  text-align: right;
+}
+
+.formula, .result {
+  word-break: break-all;
 }
 
 .result {
