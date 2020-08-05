@@ -72,7 +72,10 @@ export default {
       }
     },
     percent() {
-      if (this.formula.length === 0) return false;
+      if (
+        this.formula.length === 0 ||
+        (/[\+\-\*\/]/).test(this.formula[this.formula.length - 1])
+      ) return false;
       let entries = this.formula.split(/[\+\-\*\/]/);
       let lastEntry = entries[entries.length - 1];
       let lastEntryLength = lastEntry.length;
