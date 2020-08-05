@@ -52,6 +52,7 @@ export default {
       this.tempResult = '';
     },
     backspace() {
+      if (this.formula.length === 1) this.clear();
       this.formula = this.formula.slice(0, -1);
     },
     negative() {
