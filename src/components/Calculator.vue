@@ -40,8 +40,8 @@ export default {
       let lastEntry = entries[entries.length - 1];
       if ((/\./).test(value) && (/\./).test(lastEntry)) return false;
       if(
-        !(/[0-9]/).test(value) &&
-        !(/[0-9]/).test(this.formula[this.formula.length - 1])
+        !(/[0-9\.]/).test(value) &&
+        !(/[0-9\.]/).test(this.formula[this.formula.length - 1])
       ) {
         this.formula = this.formula.slice(0, -1);
       } 
