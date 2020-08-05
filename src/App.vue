@@ -5,6 +5,11 @@
 </template>
 
 <style lang="scss">
+@font-face {
+  font-family: "Lato";
+  src: url("./assets/Lato-Regular.ttf");
+}
+
 body {
   background-color: #F0F0F0;
 }
@@ -13,10 +18,11 @@ body {
   margin: 0rem;
   padding: 0rem;
   box-sizing: border-box;
+  font-family: Lato, Helvetica, Arial, sans-serif;
 }
 
 #app {
-  font-family: Lato, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
