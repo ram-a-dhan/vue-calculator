@@ -1,4 +1,4 @@
-const result = (state) => {
+const tempResult = (state) => {
   if (state.formula.slice(0, -1 !== NaN)) {
     return eval(state.formula);
   } else {
@@ -7,5 +7,5 @@ const result = (state) => {
 };
 
 export default {
-  result,
+  tempResult,
 };

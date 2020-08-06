@@ -1,7 +1,7 @@
 <template>
   <div class="calculator">
     <div class="display formula">{{ formula }}</div>
-    <div class="display result">{{ tempResult || 0 }}</div>
+    <div class="display result">{{ result || 0 }}</div>
     <button class="button" @click="clear()">AC</button>
     <button class="button" @click="backspace()">&lt;&timesb;</button>
     <button class="button" @click="negative()">&plus;/&minus;</button>
@@ -38,7 +38,7 @@ export default {
   // data() {
   //   return{
   //     formula: '',
-  //     tempResult: '',
+  //     result: '',
   //   }
   // },
   methods: {
@@ -57,7 +57,7 @@ export default {
     // },
     // clear() {
     //   // this.formula = '';
-    //   // this.tempResult = '';
+    //   // this.result = '';
     //   this.$store.commit('CLEAR');
     // },
     // backspace() {
@@ -97,8 +97,8 @@ export default {
     //   this.$store.dispatch('percent');
     // },
     // equals() {
-    //   // if (this.tempResult !== '') {
-    //   //   this.formula = this.tempResult;
+    //   // if (this.result !== '') {
+    //   //   this.formula = this.result;
     //   // }
     //   this.$store.commit('EQUALS');
     // },
@@ -119,20 +119,20 @@ export default {
       if (
         this.formula !== '' &&
         this.formula.slice(0, -1) !== NaN &&
-        this.formula !== this.result
+        this.formula !== this.tempResult
         ) {
-        // // this.tempResult = this.result.toString();
-        // this.$store.commit('CHANGE_RESULT', this.result.toString());
-        this.changeResult(this.result.toString());
+        // // this.result = this.tempResult.toString();
+        // this.$store.commit('CHANGE_RESULT', this.tempResult.toString());
+        this.changeResult(this.tempResult.toString());
       }
     },
   },
   computed: {
     ...mapState([
       'formula',
-      'tempResult',
+      'result',
     ]),
-    // result() {
+    // tempResult() {
     //   if (this.formula.slice(0, -1) !== NaN) {
     //     return eval(this.formula);
     //   } else {
@@ -140,7 +140,7 @@ export default {
     //   }
     // },
     ...mapGetters([
-      'result'
+      'tempResult'
     ]),
   },
 }

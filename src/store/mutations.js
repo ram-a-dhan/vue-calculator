@@ -3,12 +3,12 @@ const APPEND = (state, payload) => {
 };
 
 const CHANGE_RESULT = (state, payload) => {
-  state.tempResult = payload;
+  state.result = payload;
 };
 
 const CLEAR = (state) => {
   state.formula = '';
-  state.tempResult = '';
+  state.result = '';
 };
 
 const BACKSPACE = (state) => {
@@ -28,7 +28,7 @@ const PERCENT = (state, payload) => {
 };
 
 const EQUALS = (state) => {
-  state.formula = state.tempResult;
+  state.formula = state.result;
 };
 
 export default {
