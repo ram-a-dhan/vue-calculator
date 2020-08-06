@@ -1,6 +1,6 @@
 <template>
   <div class="calculator">
-    <div class="display formula">{{ formula || 0 }}</div>
+    <div class="display formula">{{ formula }}</div>
     <div class="display result">{{ tempResult || 0 }}</div>
     <button class="button" @click="clear()">AC</button>
     <button class="button" @click="backspace()">&lt;&timesb;</button>
@@ -26,69 +26,93 @@
 </template>
 
 <script>
+import {
+  mapState,
+  mapGetters,
+  mapActions,
+  mapMutations
+} from 'vuex';
+
 export default {
   name: 'Calculator',
-  data() {
-    return{
-      formula: '',
-      tempResult: '',
-    }
-  },
+  // data() {
+  //   return{
+  //     formula: '',
+  //     tempResult: '',
+  //   }
+  // },
   methods: {
-    append(value) {
-      let entries = this.formula.split(/[\+\-\*\/]/);
-      let lastEntry = entries[entries.length - 1];
-      if ((/\./).test(value) && (/\./).test(lastEntry)) return false;
-      if(
-        !(/[0-9\.]/).test(value) &&
-        !(/[0-9\.]/).test(this.formula[this.formula.length - 1])
-      ) {
-        this.formula = this.formula.slice(0, -1);
-      } 
-      this.formula += value.toString();
-    },
-    clear() {
-      this.formula = '';
-      this.tempResult = '';
-    },
-    backspace() {
-      if (this.formula.length === 1) this.clear();
-      this.formula = this.formula.slice(0, -1);
-    },
-    negative() {
-      if (
-        this.formula.length === 0 ||
-        (/[\+\-\*\/]/).test(this.formula[this.formula.length - 1])
-      ) return false;
-      let entries = this.formula.split(/[\+\-\*\/]/);
-      let lastEntry = entries[entries.length - 1];
-      let lastEntryLength = lastEntry.length;
-      let restOfEntry = this.formula.slice(0, lastEntryLength * -1);
-      if (restOfEntry[restOfEntry.length - 1] === '-') {
-        this.formula = restOfEntry.slice(0, -1) + '+' + lastEntry;
-      } else if (restOfEntry[restOfEntry.length - 1] === '+') {
-        this.formula = restOfEntry.slice(0, -1) + '-' + lastEntry;
-      } else {
-        this.formula = restOfEntry + '-' + lastEntry;
-      }
-    },
-    percent() {
-      if (
-        this.formula.length === 0 ||
-        (/[\+\-\*\/]/).test(this.formula[this.formula.length - 1])
-      ) return false;
-      let entries = this.formula.split(/[\+\-\*\/]/);
-      let lastEntry = entries[entries.length - 1];
-      let lastEntryLength = lastEntry.length;
-      let newEntry = Number(lastEntry) / 100;
-      this.formula = this.formula.slice(0, lastEntryLength * -1);
-      this.formula += newEntry.toString();
-    },
-    equals() {
-      if (this.tempResult !== '') {
-        this.formula = this.tempResult;
-      }
-    },
+    // append(value) {
+    //   // let entries = this.formula.split(/[\+\-\*\/]/);
+    //   // let lastEntry = entries[entries.length - 1];
+    //   // if ((/\./).test(value) && (/\./).test(lastEntry)) return false;
+    //   // if(
+    //   //   !(/[0-9\.]/).test(value) &&
+    //   //   !(/[0-9\.]/).test(this.formula[this.formula.length - 1])
+    //   // ) {
+    //   //   this.formula = this.formula.slice(0, -1);
+    //   // } 
+    //   // this.formula += value.toString();
+    //   this.$store.dispatch('append', value);
+    // },
+    // clear() {
+    //   // this.formula = '';
+    //   // this.tempResult = '';
+    //   this.$store.commit('CLEAR');
+    // },
+    // backspace() {
+    //   // if (this.formula.length === 1) this.clear();
+    //   // this.formula = this.formula.slice(0, -1);
+    //   this.$store.commit('BACKSPACE');
+    // },
+    // negative() {
+    //   // if (
+    //   //   this.formula.length === 0 ||
+    //   //   (/[\+\-\*\/]/).test(this.formula[this.formula.length - 1])
+    //   // ) return false;
+    //   // let entries = this.formula.split(/[\+\-\*\/]/);
+    //   // let lastEntry = entries[entries.length - 1];
+    //   // let lastEntryLength = lastEntry.length;
+    //   // let restOfEntry = this.formula.slice(0, lastEntryLength * -1);
+    //   // if (restOfEntry[restOfEntry.length - 1] === '-') {
+    //   //   this.formula = restOfEntry.slice(0, -1) + '+' + lastEntry;
+    //   // } else if (restOfEntry[restOfEntry.length - 1] === '+') {
+    //   //   this.formula = restOfEntry.slice(0, -1) + '-' + lastEntry;
+    //   // } else {
+    //   //   this.formula = restOfEntry + '-' + lastEntry;
+    //   // }
+    //   this.$store.dispatch('negative');
+    // },
+    // percent() {
+    //   // if (
+    //   //   this.formula.length === 0 ||
+    //   //   (/[\+\-\*\/]/).test(this.formula[this.formula.length - 1])
+    //   // ) return false;
+    //   // let entries = this.formula.split(/[\+\-\*\/]/);
+    //   // let lastEntry = entries[entries.length - 1];
+    //   // let lastEntryLength = lastEntry.length;
+    //   // let newEntry = Number(lastEntry) / 100;
+    //   // this.formula = this.formula.slice(0, lastEntryLength * -1);
+    //   // this.formula += newEntry.toString();
+    //   this.$store.dispatch('percent');
+    // },
+    // equals() {
+    //   // if (this.tempResult !== '') {
+    //   //   this.formula = this.tempResult;
+    //   // }
+    //   this.$store.commit('EQUALS');
+    // },
+    ...mapActions([
+      'append',
+      'negative',
+      'percent',
+    ]),
+    ...mapMutations({
+      changeResult: 'CHANGE_RESULT',
+      clear: 'CLEAR',
+      backspace: 'BACKSPACE',
+      equals: 'EQUALS',
+    }),
   },
   watch: {
     formula() {
@@ -97,18 +121,27 @@ export default {
         this.formula.slice(0, -1) !== NaN &&
         this.formula !== this.result
         ) {
-        this.tempResult = this.result.toString();
+        // // this.tempResult = this.result.toString();
+        // this.$store.commit('CHANGE_RESULT', this.result.toString());
+        this.changeResult(this.result.toString());
       }
     },
   },
   computed: {
-    result() {
-      if (this.formula.slice(0, -1) !== NaN) {
-        return eval(this.formula);
-      } else {
-        return eval(this.formula.slice(0, -1));
-      }
-    }
+    ...mapState([
+      'formula',
+      'tempResult',
+    ]),
+    // result() {
+    //   if (this.formula.slice(0, -1) !== NaN) {
+    //     return eval(this.formula);
+    //   } else {
+    //     return eval(this.formula.slice(0, -1));
+    //   }
+    // },
+    ...mapGetters([
+      'result'
+    ]),
   },
 }
 </script>
@@ -128,6 +161,8 @@ $buttonSize: 1.5rem;
 .button {
   display: flex;
   flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
   height: $gridSize;
 }
 
@@ -140,9 +175,6 @@ $buttonSize: 1.5rem;
   flex-flow: row nowrap;
   min-height: $gridSize;
   text-align: right;
-}
-
-.formula, .result {
   word-break: break-all;
 }
 
@@ -157,6 +189,7 @@ $buttonSize: 1.5rem;
   color: #2C3E50;
   background-color: #F0F0F0;
   border: 0px;
+  transition: all 0.5s ease-in-out;
 }
 
 .equals {
@@ -176,6 +209,7 @@ $buttonSize: 1.5rem;
 .button:active {
   color: #F0F0F0;
   background-color: #2C3E50;
+  transition: all 0.1s ease-in-out;
 }
 
 
