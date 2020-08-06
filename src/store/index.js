@@ -6,11 +6,13 @@ import getters from './getters';
 
 Vue.use(Vuex);
 
+const state = {
+  formula: '',
+  result: '',
+};
+
 export default new Vuex.Store({
-  state: {
-    formula: '',
-    result: '',
-  },
+  state,
   mutations,
   actions,
   getters,
