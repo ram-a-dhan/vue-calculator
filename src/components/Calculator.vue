@@ -35,73 +35,7 @@ import {
 
 export default {
   name: 'Calculator',
-  // data() {
-  //   return{
-  //     formula: '',
-  //     result: '',
-  //   }
-  // },
   methods: {
-    // append(value) {
-    //   // let entries = this.formula.split(/[\+\-\*\/]/);
-    //   // let lastEntry = entries[entries.length - 1];
-    //   // if ((/\./).test(value) && (/\./).test(lastEntry)) return false;
-    //   // if(
-    //   //   !(/[0-9\.]/).test(value) &&
-    //   //   !(/[0-9\.]/).test(this.formula[this.formula.length - 1])
-    //   // ) {
-    //   //   this.formula = this.formula.slice(0, -1);
-    //   // } 
-    //   // this.formula += value.toString();
-    //   this.$store.dispatch('append', value);
-    // },
-    // clear() {
-    //   // this.formula = '';
-    //   // this.result = '';
-    //   this.$store.commit('CLEAR');
-    // },
-    // backspace() {
-    //   // if (this.formula.length === 1) this.clear();
-    //   // this.formula = this.formula.slice(0, -1);
-    //   this.$store.commit('BACKSPACE');
-    // },
-    // negative() {
-    //   // if (
-    //   //   this.formula.length === 0 ||
-    //   //   (/[\+\-\*\/]/).test(this.formula[this.formula.length - 1])
-    //   // ) return false;
-    //   // let entries = this.formula.split(/[\+\-\*\/]/);
-    //   // let lastEntry = entries[entries.length - 1];
-    //   // let lastEntryLength = lastEntry.length;
-    //   // let restOfEntry = this.formula.slice(0, lastEntryLength * -1);
-    //   // if (restOfEntry[restOfEntry.length - 1] === '-') {
-    //   //   this.formula = restOfEntry.slice(0, -1) + '+' + lastEntry;
-    //   // } else if (restOfEntry[restOfEntry.length - 1] === '+') {
-    //   //   this.formula = restOfEntry.slice(0, -1) + '-' + lastEntry;
-    //   // } else {
-    //   //   this.formula = restOfEntry + '-' + lastEntry;
-    //   // }
-    //   this.$store.dispatch('negative');
-    // },
-    // percent() {
-    //   // if (
-    //   //   this.formula.length === 0 ||
-    //   //   (/[\+\-\*\/]/).test(this.formula[this.formula.length - 1])
-    //   // ) return false;
-    //   // let entries = this.formula.split(/[\+\-\*\/]/);
-    //   // let lastEntry = entries[entries.length - 1];
-    //   // let lastEntryLength = lastEntry.length;
-    //   // let newEntry = Number(lastEntry) / 100;
-    //   // this.formula = this.formula.slice(0, lastEntryLength * -1);
-    //   // this.formula += newEntry.toString();
-    //   this.$store.dispatch('percent');
-    // },
-    // equals() {
-    //   // if (this.result !== '') {
-    //   //   this.formula = this.result;
-    //   // }
-    //   this.$store.commit('EQUALS');
-    // },
     ...mapActions([
       'append',
       'negative',
@@ -121,8 +55,6 @@ export default {
         this.formula.slice(0, -1) !== NaN &&
         this.formula !== this.tempResult
         ) {
-        // // this.result = this.tempResult.toString();
-        // this.$store.commit('CHANGE_RESULT', this.tempResult.toString());
         this.changeResult(this.tempResult.toString());
       }
     },
@@ -132,13 +64,6 @@ export default {
       'formula',
       'result',
     ]),
-    // tempResult() {
-    //   if (this.formula.slice(0, -1) !== NaN) {
-    //     return eval(this.formula);
-    //   } else {
-    //     return eval(this.formula.slice(0, -1));
-    //   }
-    // },
     ...mapGetters([
       'tempResult'
     ]),
@@ -201,16 +126,9 @@ $buttonSize: 1.5rem;
   font-size: $buttonSize;
 }
 
-// .button:hover {
-//   color: #F0F0F0;
-//   background-color: #2C3E5080;
-// }
-
 .button:active {
   color: #F0F0F0;
   background-color: #2C3E50;
   transition: all 0.1s ease-in-out;
 }
-
-
 </style>
